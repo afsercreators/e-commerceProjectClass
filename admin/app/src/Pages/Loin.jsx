@@ -1,32 +1,26 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { loginApi } from "../store/api/auth";
+import { useDispatch } from "react-redux";
 
 function Loin() {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const submitHandler = async (event) => {
     event.preventDefault();
     console.log("it work");
 
-    if (!email || !Password) {
+    if (!email || !password) {
       return setError("** Email and Password is Requred");
     }
-    try {
-      const response = await axios.post(
-        `http://localhost:8000/api/users/login`,
-        {
-          email,
-          Password,
-        }
-      );
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message || "An error occurred.";
-      setError(errorMessage);
-    }
+    const credentials = { email, password };
+    dispatch(loginApi(credentials));
   };
+
+  console.log(email, password);
 
   return (
     <div>
@@ -62,7 +56,7 @@ function Loin() {
               Password
             </label>
             <input
-              value={Password}
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               type="Password"
               class="form-control"
