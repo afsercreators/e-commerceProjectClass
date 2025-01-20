@@ -85,6 +85,8 @@ async function login(req, res) {
     }
 
     const user = await Userlist.findOne({ email });
+    console.log(user);
+
     // 2nd
     if (!user) {
       return res.status(401).json({
