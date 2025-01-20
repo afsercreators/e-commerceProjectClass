@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { loginApi } from "../store/api/auth";
 import { useDispatch } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
 
 function Loin() {
   const dispatch = useDispatch();
@@ -9,18 +10,41 @@ function Loin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
-    console.log("it work");
+  // const submitHandler = async (event) => {
+  //   event.preventDefault();
+  //   if (!email || !password) {
+  //     return setError("** Email and Password is Requred");
+  //   }
+  //   const credentials = { email, password };
+  //   try {
+  //     const response = await dispatch(loginApi(credentials));
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.error("Login failed:", error);
+  //     setError("Login failed, please try again.");
+  //   }
+  // };
 
-    if (!email || !password) {
-      return setError("** Email and Password is Requred");
+  const mutation = useMutation({
+    mutationFn: (data) => loginApi(data),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error.massege);
+    },
+  });
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    try {
+      mutation.mutate({ email, password });
+    } catch (error) {
+      console.error("Caught error in handleSubmit:", error.message);
+      setError(error.message);
+      setTimeout(() => setError(" "), 8000);
     }
-    const credentials = { email, password };
-    dispatch(loginApi(credentials));
   };
-
-  console.log(email, password);
 
   return (
     <div>
