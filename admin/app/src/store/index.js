@@ -1,11 +1,18 @@
 import { legacy_createStore as createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "@redux-devtools/extension";
 import rootReducer from "./reducer/rootReducter";
-import { thunk } from "redux-thunk";
+import { persistStore, persistReducer } from "redux-persist";
+import storageSession from "redux-persist/lib/storage/session";
 
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(thunk))
-);
+const persistConfig = {
+  key: "root",
+  storage: storageSession,
+  whitelist: ["auth"],
+};
 
-export default store;
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+const store = createStore(persistedReducer, composeWithDevTools());
+
+const persistor = persistStore(store);
+
+export default { store, persistor };
