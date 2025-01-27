@@ -4,6 +4,7 @@ import { loginApi } from "../store/api/auth";
 import { loginSuccess } from "../store/action/authAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 function Loin() {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ function Loin() {
       navigate("/dashboard");
     },
     onError: (error) => {
+      toast.error(error.massege);
       console.log(error.massege);
     },
   });

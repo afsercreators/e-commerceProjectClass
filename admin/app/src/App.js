@@ -5,7 +5,10 @@ import Login from "./Pages/Loin";
 import Dashboard from "./Pages/Dashbaord";
 import useConditional from "./conditionalComponents/conditionalRoute";
 import useConditionalForLogin from "./conditionalComponents/conditionalRouteForLogin";
-
+import { ToastContainer } from "react-toastify";
+import Nav from "./Components/Nav";
+import { useSelector } from "react-redux";
+import { useState } from "react";
 // Wrapper component for Login route
 function ConditionalRouteForLogin({ children }) {
   const content = useConditionalForLogin(children); // Using hook inside a functional component
@@ -19,8 +22,17 @@ function ConditionalRoute({ children }) {
 }
 
 function App() {
+  const [authorized, setauthorized] = useState(false);
+  const auth = useSelector((state) => state.auth);
+
+  if (auth.token) {
+    setauthorized(true);
+  }
+
   return (
     <div>
+      {authorized ? <Nav /> : null}
+
       <Routes>
         <Route
           path="/login"
@@ -40,6 +52,7 @@ function App() {
         />
         <Route path="*" element={<Dashboard />} />
       </Routes>
+      <ToastContainer />
     </div>
   );
 }
